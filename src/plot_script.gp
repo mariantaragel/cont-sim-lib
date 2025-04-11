@@ -7,4 +7,4 @@ set ylabel "y"
 set grid
 set key left top
 
-plot "simulation_data.txt" using 2:3 with lines title "Numerické riešenie" lt rgb "red"
+plot "ab4.txt" using 2:3 with lines title "Adams-Bashforth 4th" lt rgb "blue"

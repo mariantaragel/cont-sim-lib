@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <cmath>
 #include "sim.hpp"
 
 double t, t_start, t_end;
@@ -28,5 +29,5 @@ void start_simulation(std::function<std::vector<double>(double, std::vector<doub
     }
 
     file.close();
-    std::cout << "Dáta uložené do simulation_data.txt\n";
+    std::cout << "Dáta uložené do " << out_file << std::endl;
 }

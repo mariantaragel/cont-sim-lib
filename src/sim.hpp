@@ -5,8 +5,9 @@
 #include <functional>
 #include <cstdlib>
 #include "ode.hpp"
-#include "rk4.hpp"
 #include "euler.hpp"
+#include "rk4.hpp"
+#include "ab4.hpp"
 
 void set_simtime(double start, double end);
 void set_output(const char *file);
