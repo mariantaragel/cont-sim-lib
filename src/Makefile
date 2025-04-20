@@ -7,10 +7,10 @@ LOGIN = xtarag01
 SERVER = merlin.fit.vutbr.cz
 SERVER_DIR = ~/SNT/project
 ZIP_FILE = $(LOGIN).zip
-OBJS = $(EXECUTABLE).o sim.o rk4.o euler.o ode.o ab4.o
+OBJS = $(EXECUTABLE).o sim.o rk4.o euler.o ode.o ab4.o integrator.o
 
 CXX = g++
-CXXFLAGS = -Wall -Werror -pedantic -g -std=c++17
+CXXFLAGS = -Wall -Werror -pedantic -g -std=c++20
 
 .PHONY = all run clean pack upload
 

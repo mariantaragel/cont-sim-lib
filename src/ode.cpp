@@ -1,8 +1,7 @@
 #include "ode.hpp"
 
-std::vector<double> ODEsolver::step(std::function<std::vector<double>(double, std::vector<double>)> f, double &t, std::vector<double> &y)
+void ODEsolver::step(double &t, double &h, std::vector<Integrator*> &integrators)
 {
-    return std::vector<double>();
 }
 
 std::vector<double> ODEsolver::vec_sum(const std::vector<double> &vec1, const std::vector<double> &vec2)

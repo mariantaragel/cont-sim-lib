@@ -4,10 +4,10 @@
 #include "ode.hpp"
 #include "rk4.hpp"
 
-class AdamsBashforth4 : public ODEsolver {
+class AdamsBashforth4 :ODEsolver {
 public:
-    AdamsBashforth4(double step);
-    std::vector<double> step(std::function<std::vector<double>(double, std::vector<double>)> f, double &t, std::vector<double> &y) override;
+    AdamsBashforth4();
+    void step(double &t, double &h, std::vector<Integrator*> &integrators) override;
 
 private:
     unsigned n = 0;
@@ -15,5 +15,6 @@ private:
     RungeKutta4 rk4_solver;
     std::vector<std::vector<double>> fi;
 };
+
 
 #endif

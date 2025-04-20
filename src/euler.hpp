@@ -5,8 +5,8 @@
 
 class Euler : public ODEsolver {
 public:
-    Euler(double step);
-    std::vector<double> step(std::function<std::vector<double>(double, std::vector<double>)> f, double &t, std::vector<double> &y) override;
+    Euler() {};
+    void step(double &t, double &h, std::vector<Integrator*> &integrators) override;
 };
 
 #endif

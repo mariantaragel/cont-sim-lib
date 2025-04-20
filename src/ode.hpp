@@ -4,15 +4,15 @@
 #include <vector>
 #include <cstdio>
 #include <functional>
+#include "integrator.hpp"
 
 class ODEsolver {
 public:
-    ODEsolver(double step) : h(step) {};
-    virtual std::vector<double> step(std::function<std::vector<double>(double, std::vector<double>)> f, double &t, std::vector<double> &y);
+    ODEsolver() {};
+    virtual void step(double &t, double &h, std::vector<Integrator*> &integrators);
 protected:
-    double h;
-    static std::vector<double> vec_sum(const std::vector<double> &v1, const std::vector<double> &v2);
-    static std::vector<double> vec_scale(const std::vector<double> &v, double k);
+    static std::vector<double> vec_sum(const std::vector<double> &vec1, const std::vector<double> &vec2);
+    static std::vector<double> vec_scale(const std::vector<double> &vec, double k);
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include "euler.hpp"
 
 class Euler {
 public:

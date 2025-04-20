@@ -1,22 +1,34 @@
-#include <cstdlib>
-#include <vector>
-#include <functional>
 #include "sim.hpp"
 
 int main()
 {
-    // Circular test
-    // dx/dt = -y
-    // dy/dt = x
-    auto system = [](double t, std::vector<double> y) -> std::vector<double> {
-        return {-y[1], y[0]};
+    struct CircularModel {
+        Integrator x, y;
+        std::vector<Integrator*> integrators;
+        AdamsBashforth4 solver;
+
+        CircularModel(double x0, double y0) :
+            x([&](double t, std::vector<double> y) { return -y[1]; }, x0),
+            y([&](double t, std::vector<double> y) { return  y[0]; }, y0)
+            {
+                integrators = {&x, &y};
+            }
+
+        void step(double &t, double &h) {
+            solver.step(t, h, integrators);
+        }
+
+        std::vector<double> output() {
+            return {x.value, y.value};
+        }
     };
 
-    set_simtime(0.0, 2 * 3.14);
-    set_output("ab4.txt");
-    AdamsBashforth4 ab4_solver(0.1);
-    
-    start_simulation(system, {1.0, 0.0}, ab4_solver);
+    CircularModel model(1.0, 0.0);
+
+    set_stepsize(0.1);
+    set_simtime(0.0, 2 * M_PI);
+    set_output("ab4_0.1_data.txt");
+    start_simulation(model);
 
     return EXIT_SUCCESS;
 }

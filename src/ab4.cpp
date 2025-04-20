@@ -1,29 +1,44 @@
 #include "ab4.hpp"
 
-AdamsBashforth4::AdamsBashforth4(double step) : ODEsolver(step), rk4_solver(step), fi(4) {}
-
-std::vector<double> AdamsBashforth4::step(std::function<std::vector<double>(double, std::vector<double>)> f, double &t, std::vector<double> &y)
+AdamsBashforth4::AdamsBashforth4() : fi(4)
 {
-    fi[p] = f(t, y);
-    
-    if (n < 4) {
-        ++n;
-        p = (p + 1) % 4;
-        return rk4_solver.step(f, t, y);
+    rk4_solver = RungeKutta4();
+}
+
+void AdamsBashforth4::step(double &t, double &h, std::vector<Integrator*> &integrators)
+{
+    size_t size = integrators.size();
+    std::vector<double> y_values(size);
+    std::vector<double> f_curr(size);
+
+    for (size_t i = 0; i < size; i++) {
+        Integrator *y = integrators[i];
+        y_values[i] = y->value;
     }
 
-    std::vector<double> y_n(y.size());
-    for (size_t i = 0; i < y.size(); ++i) {
-        y_n[i] = y[i] + (h / 24.0) * (
-            55 * fi[(p + 0) % 4][i] -
-            59 * fi[(p + 3) % 4][i] +
-            37 * fi[(p + 2) % 4][i] -
-            9 * fi[(p + 1) % 4][i]
+    for (size_t i = 0; i < size; i++) {
+        f_curr[i] = integrators[i]->f(t, y_values);
+    }
+
+    if (n < 4) {
+        rk4_solver.step(t, h, integrators);
+        fi[p] = f_curr;
+        p = (p + 1) % 4;
+        ++n;
+        return;
+    }
+
+    fi[p] = f_curr;
+
+    for (size_t i = 0; i < size; ++i) {
+        integrators[i]->value += (h / 24.0) * (
+            55.0 * fi[(p + 0) % 4][i] -
+            59.0 * fi[(p + 3) % 4][i] +
+            37.0 * fi[(p + 2) % 4][i] -
+             9.0 * fi[(p + 1) % 4][i]
         );
     }
     
-    ++n;
     p = (p + 1) % 4;
-    t += h;
-    return y_n;
+    ++n;
 }
