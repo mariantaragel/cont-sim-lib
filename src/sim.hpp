@@ -49,8 +49,6 @@ inline void print_values(std::ofstream &file, Model &model, double &t)
     file << t;
     for (auto v : y)
         file << " " << v;
-    file << " " << std::cos(t);
-    file << " " << std::sin(t);
     file << std::endl;
 }
 

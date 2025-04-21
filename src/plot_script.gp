@@ -1,11 +1,12 @@
-set terminal pngcairo enhanced font "Arial,12" size 700,700
-set output "ab4_0.1_plot.png"
+set terminal pngcairo enhanced font "Arial,12" size 1000,600
+set output "tumor_simulation_plot.png"
 
-set title "Circular test"
-set xlabel "x"
-set ylabel "y"
+set title "Population of tumor and immune cells"
+set xlabel "Time [days]"
+set ylabel "Cell population"
 set grid
-set key left top
+set key right top
 
-plot "ab4_0.1_data.txt" using 2:3 with lines title "AB4 (0.1)" lt rgb "red", \
-     "ab4_0.1_data.txt" using 4:5 with lines title "Analytical solution" lt rgb "blue"
+plot "simulation_data.txt" using 1:2 with lines title "Tumor cell population during interphase (T_I)" lt rgb "red", \
+     "simulation_data.txt" using 1:3 with lines title "Tumor cell population during mitosis (T_M)" lt rgb "blue", \
+     "simulation_data.txt" using 1:4 with lines title "Immune system population (I)" lt rgb "green"
