@@ -2,28 +2,36 @@
 
 int main()
 {
-    struct TumorModel {
-        Integrator dTI, dTM, dI;
+    struct HIVModel {
+        Integrator dIE, dI, dV, dT;
         std::vector<Integrator*> integrators;
         RungeKutta4 solver;
 
-        const double a1 = 0.8470, a4 = 0.9159;
-        const double c1 = 7.56e-2, c2 = 3.422e-4, c3 = 7.56e-2, c4 = 3.422e-4;
-        const double d1 = 0.04, d2 = 0.1145, d3 = 0.6641;
-        const double k = 0.037, rho = 0.2, alpha = 0.3e6, n = 3;
+        // const double beta = 4.8e-6, lambda = 2.3;
+        // const double deltaIE = 0.05, deltaI = 0.24;
+        // const double N = 500, C = 3;
+        // const double m = 2.475, mi0 = 0.0046;
 
-        TumorModel(double dTI0, double dTM0, double dI0) :
-            dTI([&](double t, std::vector<double> y) {
-                double TI = y[0], TM = y[1], I = y[2];
-                return 2 * a4 * TM - (c1 * I + d2) * TI - a1 * TI; }, dTI0),
-            dTM([&](double t, std::vector<double> y) {
-                double TI = y[0], TM = y[1], I = y[2];
-                return a1 * TI - d3 * TM - a4 * TM - c3 * TM * I; }, dTM0),
+        const double beta = 4.8e-6, lambda = 23;
+        const double deltaIE = 0.05, deltaI = 0.2;
+        const double N = 500, C = 2.4;
+        const double m = 2.475, mi0 = 0.0046;
+
+        HIVModel(double dIE0, double dI0, double dV0, double dT0) :
+            dIE([&](double t, std::vector<double> y) {
+                double IE = y[0], V = y[2], T = y[3];
+                return beta * T * V - (m + deltaIE) * IE; }, dIE0),
             dI([&](double t, std::vector<double> y) {
-                double TI = y[0], TM = y[1], I = y[2];
-                return k + (rho * I * pow(TI + TM, n)) / (alpha + pow(TI + TM, n)) - c2 * I * TI - c4 * TM * I - d1 * I; }, dI0)
+                double IE = y[0], I = y[1];
+                return m * IE - deltaI * I; }, dI0),
+            dV([&](double t, std::vector<double> y) {
+                double I = y[1], V = y[2], T = y[3];
+                return N * deltaI * I - C * V - beta * T * V; }, dV0),
+            dT([&](double t, std::vector<double> y) {
+                double V = y[2], T = y[3];
+                return lambda - beta * T * V - mi0 * T; }, dT0)
             {
-                integrators = {&dTI, &dTM, &dI};
+                integrators = {&dIE, &dI, &dV, &dT};
             }
 
         void step(double &t, double &h) {
@@ -31,14 +39,14 @@ int main()
         }
 
         std::vector<double> output() {
-            return {dTI.value, dTM.value, dI.value};
+            return {dIE.value, dI.value, dV.value, dT.value};
         }
     };
 
-    TumorModel model(1.0, 1.0, 0.0);
+    HIVModel model(1.0, 1.0, 1.0, 100.0);
 
-    set_stepsize(0.01);
-    set_simtime(0.0, 100.0);
+    set_stepsize(0.001);
+    set_simtime(0.0, 600.0);
     set_output("simulation_data.txt");
     start_simulation(model);
 
