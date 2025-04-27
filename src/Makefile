@@ -7,23 +7,37 @@ LOGIN = xtarag01
 SERVER = merlin.fit.vutbr.cz
 SERVER_DIR = ~/SNT/project
 ZIP_FILE = $(LOGIN).zip
-OBJS = $(EXECUTABLE).o sim.o rk4.o euler.o ode.o ab4.o integrator.o
+TUMOR_OBJS = tumor.o sim.o rk4.o euler.o ode.o ab4.o integrator.o
+HIV_OBJS = hiv.o sim.o rk4.o euler.o ode.o ab4.o integrator.o
+TANK_OBJS = tank.o sim.o rk4.o euler.o ode.o ab4.o integrator.o
 
 CXX = g++
-CXXFLAGS = -Wall -Werror -pedantic -g -std=c++20
+CXXFLAGS = -Wall -Werror -pedantic -std=c++20
 
-.PHONY = all run clean pack upload
+.PHONY = all tumor hiv tank clean pack upload
 
-all: $(EXECUTABLE)
+all: tumor hiv tank
 
-$(EXECUTABLE): $(OBJS)
-	$(CXX) $(OBJS) -o $(EXECUTABLE)
+tumor: $(TUMOR_OBJS)
+	$(CXX) $(TUMOR_OBJS) -o tumor
 
-run: $(EXECUTABLE)
-	./$(EXECUTABLE) $(ARGS)
+hiv: $(HIV_OBJS)
+	$(CXX) $(HIV_OBJS) -o hiv
+
+tank: $(TANK_OBJS)
+	$(CXX) $(TANK_OBJS) -o tank
+
+tumor_plot:
+	gnuplot ../plot_scripts/plot_tumor.gp
+
+hiv_plot:
+	gnuplot ../plot_scripts/plot_hiv.gp
+
+tank_plot:
+	gnuplot ../plot_scripts/plot_tank.gp
 
 clean:
-	rm -f $(EXECUTABLE) *.o $(ZIP_FILE)
+	rm -f tumor hiv tank *.o $(ZIP_FILE)
 
 pack: $(ZIP_FILE)
 
@@ -34,6 +48,3 @@ upload: $(ZIP_FILE)
 	scp $^ $(SERVER):$(SERVER_DIR)
 	ssh $(LOGIN)@$(SERVER) \
 		"cd $(SERVER_DIR) && unzip $^ && make"
-
-gdb: $(EXECUTABLE)
-	gdb -exec $(EXECUTABLE) --args $(ARGS)

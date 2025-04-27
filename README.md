@@ -1,1 +1,1 @@
-# cont-sim-lib
+# Continuous simulation library
