@@ -5,7 +5,7 @@ int main()
     struct HIVModel {
         Integrator dIE, dI, dV, dT;
         std::vector<Integrator*> integrators;
-        AdamsBashforth4 solver;
+        Euler solver;
 
         const double beta = 4.8e-6, lambda = 2.3;
         const double deltaIE = 0.05, deltaI = 0.24;

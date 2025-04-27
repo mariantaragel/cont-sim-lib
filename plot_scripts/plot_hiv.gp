@@ -1,7 +1,7 @@
 set terminal pngcairo enhanced font "Arial,15" size 1000,600
-set output "hiv_ab4_01.png"
+set output "hiv_euler_01.png"
 
-set multiplot layout 2,2 title "HIV model, method=Adams-Bashforth 4th, h=0.01"
+set multiplot layout 2,2 title "HIV model, method=Euler, h=0.01"
 
 # 1. T (target cells - CD4+)
 set xlabel "Time t"
